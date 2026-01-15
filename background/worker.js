@@ -1,6 +1,6 @@
 const inFlight = new Set();
 
-const GITHUB_OWNER = "YOUR_GITHUB_USERNAME";
+const GITHUB_OWNER = "YOUR_USERNAME";
 const GITHUB_REPO = "CodeForces";
 const GITHUB_BRANCH = "main";
 
