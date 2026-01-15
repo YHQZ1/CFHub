@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "CFHub",
+  "version": "0.1.0",
+  "description": "Detect and sync Accepted Codeforces submissions.",
+  "permissions": ["storage", "tabs"],
+  "host_permissions": ["https://codeforces.com/*"],
+  "background": {
+    "service_worker": "background/worker.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://codeforces.com/problemset/status*"],
+      "js": ["content/problemsetStatusWatcher.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://codeforces.com/submission/*",
+        "https://codeforces.com/problemset/submission/*/*"
+      ],
+      "js": ["content/submissionWatcher.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
