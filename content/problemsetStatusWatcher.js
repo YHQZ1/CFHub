@@ -1,8 +1,4 @@
-// CFHub — Problemset Status Watcher (persistent)
-
 (() => {
-  console.log("[CFHub] watcher loaded");
-
   let lastSeenSubmissionId = null;
   const seenThisSession = new Set();
 
@@ -24,15 +20,12 @@
     );
     if (!rows.length) return;
 
-    // Load marker once
     if (lastSeenSubmissionId === null) {
       lastSeenSubmissionId = await loadMarker();
 
-      // First ever run
       if (!lastSeenSubmissionId) {
         lastSeenSubmissionId = rows[0].getAttribute("data-submission-id");
         saveMarker(lastSeenSubmissionId);
-        console.log("[CFHub] initialized marker:", lastSeenSubmissionId);
         return;
       }
     }
@@ -44,23 +37,19 @@
       if (Number(submissionId) <= Number(lastSeenSubmissionId)) continue;
       if (!row.querySelector(".verdict-accepted")) continue;
 
-      seenThisSession.add(submissionId);
-
       const link = row.querySelector("a.view-source");
-      if (!link) return;
+      if (!link) continue;
 
-      const submissionUrl = link.href;
+      seenThisSession.add(submissionId);
 
       chrome.runtime.sendMessage({
         type: "NEW_ACCEPTED_SUBMISSION",
         submissionId,
-        submissionUrl,
+        submissionUrl: link.href,
       });
 
       lastSeenSubmissionId = submissionId;
       saveMarker(submissionId);
-
-      console.log("[CFHub] detected NEW Accepted:", submissionId);
     }
   }
 
